@@ -1,0 +1,37 @@
+﻿cliente_id,macroactivo,activo,perfil_activo,puntaje_activo,participacion_actual,rentabilidad_esperada_activo,volatilidad_activo,rentabilidad_portafolio,volatilidad_portafolio,perfil_riesgo_cliente
+101,Renta Fija,Bono Corporativo Alpha,Conservador,4.2,0.65,0.055,0.03,0.068,0.042,Conservador
+101,FIC,FIC RF Premium 1,Conservador,3.8,0.25,0.072,0.045,0.068,0.042,Conservador
+101,Renta Variable,Acción Empresa Delta,Moderado,3.5,0.1,0.115,0.18,0.068,0.042,Conservador
+102,Renta Fija,Bono Empresa Beta 2030,Conservador,4.5,0.45,0.058,0.028,0.091,0.065,Moderado
+102,FIC,FIC Balanceado Omega,Moderado,4.1,0.3,0.085,0.055,0.091,0.065,Moderado
+102,Renta Variable,Acción Compañía Gamma,Moderado,3.9,0.2,0.125,0.16,0.091,0.065,Moderado
+102,Alternativo,Fondo Inmobiliario Zeta,Moderado,3.2,0.05,0.095,0.12,0.091,0.065,Moderado
+103,FIC,FIC Renta Fija Theta,Conservador,4,0.15,0.07,0.042,0.059,0.038,Conservador
+103,Renta Fija,CDT Banco Epsilon 12M,Conservador,3.9,0.8,0.052,0.032,0.059,0.038,Conservador
+103,Alternativo,Fondo Inmobiliario Kappa,Conservador,2.8,0.05,0.078,0.095,0.059,0.038,Conservador
+104,Renta Variable,Acción Corporación Sigma,Moderado,4.3,0.35,0.128,0.175,0.105,0.098,Arriesgado
+104,FIC,FIC Acciones Lambda,Moderado,4.2,0.25,0.088,0.058,0.105,0.098,Arriesgado
+104,Renta Fija,Bono Industrial Phi 2029,Moderado,3.7,0.25,0.06,0.035,0.105,0.098,Arriesgado
+104,Alternativo,Private Equity Rho,Arriesgado,3.5,0.15,0.11,0.14,0.105,0.098,Arriesgado
+105,Renta Fija,Bono Soberano Ficticio 2032,Conservador,4.8,0.55,0.056,0.025,0.075,0.051,Moderado
+105,FIC,FIC Deuda Tau,Conservador,4.3,0.2,0.075,0.048,0.075,0.051,Moderado
+105,Renta Variable,Acción Holdings Psi,Moderado,4,0.15,0.12,0.17,0.075,0.051,Moderado
+105,Alternativo,Fondo Infraestructura Chi,Moderado,3.6,0.1,0.092,0.11,0.075,0.051,Moderado
+106,FIC,FIC Mercados Emergentes Mu,Moderado,3.9,0.3,0.082,0.062,0.112,0.125,Arriesgado
+106,Renta Variable,Acción Grupo Xi,Arriesgado,3.8,0.5,0.135,0.19,0.112,0.125,Arriesgado
+106,Renta Fija,CDT Banco Iota 6M,Moderado,3.5,0.05,0.058,0.038,0.112,0.125,Arriesgado
+106,Alternativo,Fondo Venture Capital Nu,Arriesgado,3.3,0.15,0.105,0.15,0.112,0.125,Arriesgado
+107,Renta Fija,Bono Municipal Eta 2031,Conservador,4.6,0.7,0.054,0.029,0.064,0.041,Conservador
+107,FIC,FIC RF Sostenible Pi,Conservador,4.4,0.2,0.073,0.046,0.064,0.041,Conservador
+107,Renta Variable,Acción Industrial Upsilon,Moderado,2.9,0.1,0.118,0.182,0.064,0.041,Conservador
+108,Renta Fija,Bono Indexado Omega 2035,Moderado,4.1,0.4,0.059,0.033,0.088,0.071,Moderado
+108,Renta Variable,Acción Servicios Zeta Prime,Moderado,4,0.18,0.122,0.168,0.088,0.071,Moderado
+108,FIC,FIC Balanceado Alfa,Moderado,3.8,0.35,0.08,0.052,0.088,0.071,Moderado
+108,Alternativo,Fondo Agroindustrial Sigma,Moderado,3.4,0.07,0.098,0.125,0.088,0.071,Moderado
+109,Renta Fija,CDT Entidad Beta 18M,Conservador,3.6,0.9,0.051,0.034,0.055,0.036,Conservador
+109,FIC,FIC Liquidez Delta,Conservador,3.2,0.08,0.068,0.05,0.055,0.036,Conservador
+109,Renta Variable,Acción Utilities Kappa,Conservador,2.5,0.02,0.112,0.185,0.055,0.036,Conservador
+110,Renta Variable,Acción Exchange Theta,Arriesgado,4.5,0.4,0.132,0.18,0.118,0.115,Arriesgado
+110,FIC,FIC Acciones Global Rho,Arriesgado,4.1,0.25,0.095,0.07,0.118,0.115,Arriesgado
+110,Alternativo,Fondo Private Equity Lambda,Arriesgado,3.9,0.25,0.115,0.16,0.118,0.115,Arriesgado
+110,Renta Fija,Bono Financiero Gamma 2027,Moderado,3.8,0.1,0.061,0.036,0.118,0.115,Arriesgado
