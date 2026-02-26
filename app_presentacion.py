@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 # Configuración de página
 st.set_page_config(
@@ -444,8 +445,10 @@ def graficar_comparativa_clientes(df_portafolio, df_estado_actual, metricas_prop
 @st.cache_data
 def cargar_y_procesar_datos():
     """Carga el CSV y ejecuta todo el pipeline de análisis"""
-    # Cargar datos
-    df = pd.read_csv('portafolios.csv', encoding='utf-8')
+    # Cargar datos - obtener ruta relativa al script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(script_dir, 'portafolios.csv')
+    df = pd.read_csv(csv_path, encoding='utf-8')
     
     # Paso 1: Preparar datos
     estado, activos = preparar_datos_portafolio(df, limites_perfiles)
