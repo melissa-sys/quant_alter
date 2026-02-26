@@ -445,7 +445,7 @@ def graficar_comparativa_clientes(df_portafolio, df_estado_actual, metricas_prop
 def cargar_y_procesar_datos():
     """Carga el CSV y ejecuta todo el pipeline de análisis"""
     # Cargar datos
-    df = pd.read_csv('insumos/portafolios.csv', encoding='utf-8')
+    df = pd.read_csv('portafolios.csv', encoding='utf-8')
     
     # Paso 1: Preparar datos
     estado, activos = preparar_datos_portafolio(df, limites_perfiles)
