@@ -445,9 +445,8 @@ def graficar_comparativa_clientes(df_portafolio, df_estado_actual, metricas_prop
 @st.cache_data
 def cargar_y_procesar_datos():
     """Carga el CSV y ejecuta todo el pipeline de análisis"""
-    # Cargar datos - obtener ruta relativa al script
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    csv_path = os.path.join(script_dir, 'portafolios.csv')
+    # Cargar datos (ruta robusta que funciona en cualquier entorno)
+    csv_path = os.path.join(os.path.dirname(__file__), 'insumos', 'portafolios.csv')
     df = pd.read_csv(csv_path, encoding='utf-8')
     
     # Paso 1: Preparar datos
@@ -472,20 +471,6 @@ with st.spinner('⏳ Cargando y procesando datos...'):
 # HEADER & TÍTULO
 # ============================================================================
 st.title('Análisis & Rebalanceo de Portafolios')
-st.markdown('### Sistema de Optimización de Portafolios por Perfil de Riesgo')
-
-# Breve explicación del modelo
-st.markdown("""
-**Objetivo del Modelo:**
-El sistema analiza 10 portafolios de clientes y genera recomendaciones para:
-1. **Cumplir límites regulatorios** por perfil de riesgo (Conservador/Moderado/Arriesgado)
-2. **Mejorar la eficiencia** (Sharpe Ratio = Rentabilidad ÷ Volatilidad)
-3. **Reducir el riesgo** sin sacrificar excesivamente el retorno
-
-**Trade-offs esperados:**
-Algunos portafolios pueden *sacrificar rentabilidad* (-0.X%) para *cumplir límites* y *reducir volatilidad* significativamente, 
-resultando en un **Sharpe mejorado** (mejor relación riesgo-retorno).
-""")
 
 st.divider()
 
@@ -532,7 +517,7 @@ with col_pipe4:
                 border-radius: 10px; color: white;'>
         <h3 style='margin: 0; font-size: 2em;'>④</h3>
         <p style='margin: 5px 0; font-weight: bold;'>Visualizar</p>
-        <p style='margin: 0; font-size: 0.85em;'>Comparativa Final</p>
+        <p style='margin: 0; font-size: 0.85em;'>Comparativa final</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -656,6 +641,162 @@ with col_pie3:
 st.divider()
 
 # ============================================================================
+# METODOLOGÍA: CÁLCULOS Y NORMALIZACIÓN
+# ============================================================================
+st.subheader('Metodología de Optimización')
+
+# Card principal con explicación
+st.markdown("""
+<div style='padding: 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            border-radius: 15px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1);'>
+    <h3 style='margin: 0 0 15px 0; font-size: 1.4em;'>🧮 Proceso de Cálculo y Rebalanceo</h3>
+    <p style='margin: 0 0 10px 0; font-size: 1.05em; line-height: 1.6;'>
+        El modelo optimiza portafolios mediante métricas cuantitativas robustas y un proceso dinámico de normalización.
+    </p>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("")
+
+# Métricas en 3 columnas
+col_met1, col_met2, col_met3 = st.columns(3)
+
+with col_met1:
+    st.markdown("""
+    <div style='padding: 20px; background: white; border-left: 5px solid #3b82f6; 
+                border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+        <h4 style='margin: 0 0 10px 0; color: #1e40af;'>📊 Rentabilidad Portafolio</h4>
+        <p style='margin: 0; color: #475569; font-size: 0.95em; line-height: 1.5;'>
+            <strong>Fórmula:</strong> Suma ponderada de retornos individuales
+        </p>
+        <div style='background: #f1f5f9; padding: 10px; border-radius: 5px; margin-top: 10px; font-family: monospace;'>
+            R<sub>p</sub> = Σ (w<sub>i</sub> × r<sub>i</sub>)
+        </div>
+        <p style='margin: 10px 0 0 0; color: #64748b; font-size: 0.85em;'>
+            Donde w<sub>i</sub> = participación del activo i<br>
+            r<sub>i</sub> = rentabilidad esperada del activo i
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_met2:
+    st.markdown("""
+    <div style='padding: 20px; background: white; border-left: 5px solid #f59e0b; 
+                border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+        <h4 style='margin: 0 0 10px 0; color: #d97706;'>📉 Volatilidad Portafolio</h4>
+        <p style='margin: 0; color: #475569; font-size: 0.95em; line-height: 1.5;'>
+            <strong>Fórmula:</strong> Raíz de suma ponderada de varianzas
+        </p>
+        <div style='background: #fef3c7; padding: 10px; border-radius: 5px; margin-top: 10px; font-family: monospace;'>
+            σ<sub>p</sub> = √[Σ (w<sub>i</sub>² × σ<sub>i</sub>²)]
+        </div>
+        <p style='margin: 10px 0 0 0; color: #64748b; font-size: 0.85em;'>
+            Donde w<sub>i</sub> = participación del activo i<br>
+            σ<sub>i</sub> = volatilidad del activo i
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_met3:
+    st.markdown("""
+    <div style='padding: 20px; background: white; border-left: 5px solid #10b981; 
+                border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
+        <h4 style='margin: 0 0 10px 0; color: #059669;'>⚡ Sharpe Ratio</h4>
+        <p style='margin: 0; color: #475569; font-size: 0.95em; line-height: 1.5;'>
+            <strong>Fórmula:</strong> Eficiencia riesgo-retorno
+        </p>
+        <div style='background: #d1fae5; padding: 10px; border-radius: 5px; margin-top: 10px; font-family: monospace;'>
+            Sharpe = (R<sub>p</sub> - R<sub>f</sub>) / σ<sub>p</sub>
+        </div>
+        <p style='margin: 10px 0 0 0; color: #64748b; font-size: 0.85em;'>
+            Donde R<sub>f</sub> = tasa libre de riesgo
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.markdown("")
+
+# Flujo de rebalanceo
+st.markdown("""
+<div style='padding: 20px; background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 10px; margin-top: 15px;'>
+    <h4 style='margin: 0 0 15px 0; color: #1e293b;'>🔄 Proceso Dinámico de Rebalanceo y Normalización</h4>
+</div>
+""", unsafe_allow_html=True)
+
+# Pasos del proceso usando st.markdown para cada uno
+col_flow1, col_flow2 = st.columns([1, 20])
+
+with col_flow1:
+    st.markdown("<div style='background: #6366f1; color: white; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em;'>1</div>", unsafe_allow_html=True)
+with col_flow2:
+    st.markdown("**Detectar Alertas:** Identificar macroactivos fuera de límites (RF, FIC, RV_ALT) según perfil de riesgo")
+
+col_flow3, col_flow4 = st.columns([1, 20])
+with col_flow3:
+    st.markdown("<div style='background: #8b5cf6; color: white; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em;'>2</div>", unsafe_allow_html=True)
+with col_flow4:
+    st.markdown("**Aplicar Ajustes:** Reducir activos de baja calidad (bajo puntaje) si excede límites / Aumentar mejores activos si está por debajo")
+
+col_flow5, col_flow6 = st.columns([1, 20])
+with col_flow5:
+    st.markdown("<div style='background: #06b6d4; color: white; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em;'>3</div>", unsafe_allow_html=True)
+with col_flow6:
+    st.markdown("**Normalización Dinámica:** Recalcular participaciones para que sumen 100%: `w'ᵢ = wᵢ / Σwⱼ`")
+
+col_flow7, col_flow8 = st.columns([1, 20])
+with col_flow7:
+    st.markdown("<div style='background: #10b981; color: white; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em;'>4</div>", unsafe_allow_html=True)
+with col_flow8:
+    st.markdown("**Recalcular Métricas:** Con las nuevas ponderaciones w'ᵢ, calcular Rₚ, σₚ, y Sharpe propuesto")
+
+col_flow9, col_flow10 = st.columns([1, 20])
+with col_flow9:
+    st.markdown("<div style='background: #f59e0b; color: white; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em;'>5</div>", unsafe_allow_html=True)
+with col_flow10:
+    st.markdown("**Validar Mejora:** Comparar métricas propuestas vs actuales: Δ Sharpe, Δ Rentabilidad, Δ Volatilidad")
+
+# Ejemplo de normalización
+st.info("""
+**💡 Ejemplo de Normalización:**
+
+Si un portafolio tiene [A: 40%, B: 35%, C: 25%] y reducimos C en 10%, 
+las nuevas participaciones sin normalizar serían [40%, 35%, 15%] = **90% total**.
+
+**Tras normalizar:** [40/90 = 44.4%, 35/90 = 38.9%, 15/90 = 16.7%] = **100% ✓**
+""")
+
+st.markdown("")
+
+# Tarjeta de estrategias
+col_est1, col_est2 = st.columns(2)
+
+with col_est1:
+    st.markdown("""
+    <div style='padding: 20px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); 
+                border-radius: 10px; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); height: 160px;'>
+        <h4 style='margin: 0 0 10px 0; font-size: 1.2em;'>⚠️ CORRECCIÓN</h4>
+        <p style='margin: 0; font-size: 0.95em; line-height: 1.6;'>
+            <strong>Cuándo:</strong> Cliente incumple límites de su perfil de riesgo<br>
+            <strong>Acción:</strong> Ajustar macroactivos (RF, FIC, RV_ALT) para cumplir rangos regulatorios
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+with col_est2:
+    st.markdown("""
+    <div style='padding: 20px; background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); 
+                border-radius: 10px; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); height: 160px;'>
+        <h4 style='margin: 0 0 10px 0; font-size: 1.2em;'>⚡ OPTIMIZACIÓN</h4>
+        <p style='margin: 0; font-size: 0.95em; line-height: 1.6;'>
+            <strong>Cuándo:</strong> Cliente cumple límites pero tiene activos de baja calidad<br>
+            <strong>Acción:</strong> Reemplazar activos con puntaje <3.5 por mejores alternativas
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+st.divider()
+
+# ============================================================================
 # IMPACTO DEL MODELO: MEJORAS CUANTIFICADAS
 # ============================================================================
 st.subheader('Impacto del Modelo de Optimización')
@@ -663,9 +804,9 @@ st.subheader('Impacto del Modelo de Optimización')
 # Explicación de métricas
 st.info("""
 **Guía de Interpretación:**
-- **Sharpe Ratio** (Eficiencia): Rentabilidad ÷ Volatilidad. Mayor es mejor (más retorno por unidad de riesgo).
-- **Rentabilidad**: Retorno esperado del portafolio. Positivo = aumentó | Negativo = se sacrificó para reducir riesgo.
-- **Volatilidad** (Riesgo): Desviación estándar. Reducción positiva = menos riesgo | Negativa = más riesgo.
+- **Sharpe Ratio**: Mayor es mejor (más retorno por unidad de riesgo).
+- **Rentabilidad**: Positivo = aumentó | Negativo = se sacrificó para reducir riesgo.
+- **Volatilidad**: Reducción positiva = menos riesgo | Negativa = más riesgo.
 
 **Trade-off común:** El modelo puede sacrificar rentabilidad para cumplir límites regulatorios y reducir volatilidad, mejorando la eficiencia (Sharpe).
 """)
@@ -714,7 +855,6 @@ with col_imp1:
     
     mejoras_positivas = (comparativa_ordenada['mejora_sharpe'] > 0).sum()
     st.success(f'**{mejoras_positivas}/{len(comparativa_ordenada)} clientes** mejoraron su Sharpe (más eficientes)')
-    st.caption('Verde = Mejora | Rojo = Empeora')
 
 # Mejora en Rentabilidad
 with col_imp2:
@@ -753,13 +893,9 @@ with col_imp2:
     plt.tight_layout()
     st.pyplot(fig_rent)
     
-    rent_mejoras = (comparativa_ordenada['mejora_rentabilidad'] > 0).sum()
     rent_sacrificios = (comparativa_ordenada['mejora_rentabilidad'] < 0).sum()
-    if rent_mejoras > 0:
-        st.success(f'**{rent_mejoras}/{len(comparativa_ordenada)} clientes** aumentaron rentabilidad')
     if rent_sacrificios > 0:
         st.warning(f'**{rent_sacrificios} clientes** sacrificaron rentabilidad para cumplir límites y reducir riesgo')
-    st.caption('Verde = Aumentó | Rojo = Se sacrificó (trade-off por menor riesgo)')
 
 st.divider()
 
@@ -808,7 +944,6 @@ with col_imp3:
         st.success(f'**{vol_reducciones}/{len(comparativa_ordenada)} clientes** redujeron riesgo (volatilidad)')
     if vol_aumentos > 0:
         st.error(f'**{vol_aumentos} clientes** aumentaron volatilidad')
-    st.caption('Verde = Redujo riesgo | Rojo = Aumentó riesgo')
 
 with col_imp4:
     st.markdown('**Espacio Riesgo-Retorno: Actual → Propuesto**')
@@ -872,8 +1007,6 @@ with col_imp4:
     
     plt.tight_layout()
     st.pyplot(fig_scatter)
-    
-    st.caption('Círculos = Actual | Estrellas = Propuesto | Flechas = Dirección del cambio')
 
 st.divider()
 
@@ -906,13 +1039,6 @@ tabla_resultados.columns = ['Cliente', 'Perfil', 'Cumple Límites', 'Cambios Apl
 
 st.dataframe(tabla_resultados, use_container_width=True, hide_index=True)
 
-st.caption("""
-**Interpretación de deltas:**
-• Δ Sharpe: Positivo = más eficiente | Negativo = menos eficiente
-• Δ Rentabilidad: Positivo = aumentó | Negativo = se sacrificó (trade-off por cumplir límites)
-• Δ Volatilidad: Positivo = redujo riesgo | Negativo = aumentó riesgo
-""")
-
 st.divider()
 
 # ============================================================================
@@ -929,7 +1055,6 @@ with col_resumen1:
         <h4 style='margin: 0;'>Eficiencia (Sharpe Ratio)</h4>
         <p style='font-size: 1.5em; margin: 10px 0; font-weight: bold;'>{:+.4f}</p>
         <p style='margin: 0; font-size: 0.9em;'>Mejora promedio por cliente</p>
-        <p style='margin: 5px 0 0 0; font-size: 0.8em; opacity: 0.9;'>Mayor Sharpe = Más retorno por riesgo</p>
     </div>
     """.format(comparativa['mejora_sharpe'].mean()), unsafe_allow_html=True)
 
@@ -956,7 +1081,6 @@ with col_resumen3:
         <h4 style='margin: 0;'>Riesgo (Volatilidad)</h4>
         <p style='font-size: 1.5em; margin: 10px 0; font-weight: bold;'>{:+.2f}%</p>
         <p style='margin: 0; font-size: 0.9em;'>Reducción promedio</p>
-        <p style='margin: 5px 0 0 0; font-size: 0.8em; opacity: 0.9;'>Positivo = Menor riesgo</p>
     </div>
     """.format(reduccion_vol_prom), unsafe_allow_html=True)
 
@@ -965,8 +1089,7 @@ with col_resumen3:
 # ANÁLISIS INDIVIDUAL (Opcional - Expandible)
 # ============================================================================
 st.divider()
-with st.expander("Ver Análisis Detallado por Cliente (Opcional)"):
-    st.markdown("### Drill-Down: Análisis Individual")
+with st.expander("Detalle por cliente"):
     
     # Selector de cliente
     clientes_lista = sorted(estado_clientes['cliente_id'].unique())
