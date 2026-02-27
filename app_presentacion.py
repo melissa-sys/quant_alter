@@ -446,7 +446,7 @@ def graficar_comparativa_clientes(df_portafolio, df_estado_actual, metricas_prop
 def cargar_y_procesar_datos():
     """Carga el CSV y ejecuta todo el pipeline de análisis"""
     # Cargar datos (ruta robusta que funciona en cualquier entorno)
-    csv_path = os.path.join(os.path.dirname(__file__), 'insumos', 'portafolios.csv')
+    csv_path = os.path.join(os.path.dirname(__file__),'portafolios.csv')
     df = pd.read_csv(csv_path, encoding='utf-8')
     
     # Paso 1: Preparar datos
